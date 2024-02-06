@@ -1,0 +1,40 @@
+@import 'variables/variables';
+
+.container {
+    border-radius: 10px;
+    box-shadow: $boxShadow;
+    overflow: hidden;
+    max-width: 85%;
+    padding: 40px;
+}
+
+.login-form {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    &-title {
+        font-weight: bold;
+        color: $primaryColor;
+    }
+
+    &-button .MuiButtonBase-root.MuiButton-root {
+        width: 65%;
+        padding: 15px;
+        background-color: $primaryColor;
+    }
+}
+
+.register {
+    color: $primaryColor;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.new-to {
+    color: $fadedText;
+    display: inline-flex;
+    width: 65%;
+}

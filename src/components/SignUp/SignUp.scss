@@ -1,0 +1,20 @@
+@import 'variables/variables';
+
+.signup-form {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    &-title {
+        font-weight: bold;
+        color: $primaryColor;
+    }
+
+    &-button .MuiButtonBase-root.MuiButton-root {
+        width: 60%;
+        padding: 15px;
+        background-color: $primaryColor;
+    }
+}
