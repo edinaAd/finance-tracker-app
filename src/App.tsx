@@ -10,6 +10,7 @@ import SignUp from 'components/SignUp/SignUp';
 import Dashboard from 'components/Dashboard/Dashboard';
 import { AuthContextProvider, UserAuth } from 'context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute'
+import DashboardChart from 'components/Dashboard/DashboardChart';
 
 function App() {
 
@@ -81,6 +82,8 @@ function App() {
 								</ProtectedRoute>
 							}
 						/>
+						<Route path='/dashboardChart' element={<DashboardChart />} />
+
 						<Route path='/contact' element={<Contact />} />
 						<Route path='*' element={<h1>Page not found</h1>} />
 					</Routes>

@@ -16,5 +16,18 @@
         width: 60%;
         padding: 15px;
         background-color: $primaryColor;
+        font-weight: bold;
     }
+}
+
+.register {
+    color: $primaryColor;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.go-to {
+    color: $fadedText;
+    display: inline-flex;
+    width: 60%;
 }

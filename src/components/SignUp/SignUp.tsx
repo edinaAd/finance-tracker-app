@@ -5,7 +5,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import './SignUp.scss';
 import { UserAuth } from 'context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
 	const [registerEmail, setRegisterEmail] = useState("");
@@ -86,6 +86,9 @@ const SignUp = () => {
 							</div>
 							<div className='signup-form-button mb-2'>
 								<Button variant="contained" onClick={handleSubmit}>Sign Up</Button>
+							</div>
+							<div>
+								<span className='go-to'>Go To <span className='register'><Link to="/">Login</Link></span></span>
 							</div>
 						</div>
 					</div>

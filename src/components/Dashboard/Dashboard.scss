@@ -1,0 +1,45 @@
+@import 'variables/variables';
+
+
+body {
+    background-color: #f0f0f0 !important;
+}
+
+.MuiPaper-root.MuiPaper-elevation {
+    background-color: white;
+    color: black;
+}
+
+.total-income {
+    display: grid;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.balance {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 48%;
+    margin-top: 20px;
+}
+
+.user-info {
+    padding: 10px;
+}
+
+.user-info .MuiSvgIcon-root {
+    width: 5rem;
+    height: 5rem;
+}
+
+.logout-button {
+    padding: 12px 0px;
+
+    & .MuiButtonBase-root.MuiButton-root {
+        width: 90%;
+        background-color: $primaryColor;
+        font-weight: bold;
+    }
+}
