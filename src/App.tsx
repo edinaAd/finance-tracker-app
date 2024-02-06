@@ -11,6 +11,9 @@ import Dashboard from 'components/Dashboard/Dashboard';
 import { AuthContextProvider, UserAuth } from 'context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute'
 import DashboardChart from 'components/Dashboard/DashboardChart';
+import Expenses from 'components/Expenses/Expenses';
+import Income from 'components/Income/Income';
+import Categories from 'components/Categories/Categories';
 
 function App() {
 
@@ -76,15 +79,16 @@ function App() {
 						<Route path='/signup' element={<SignUp />} />
 						<Route
 							path='/dashboard'
-							element={
-								<ProtectedRoute>
-									<Dashboard />
-								</ProtectedRoute>
-							}
+							// element={
+							// 	<ProtectedRoute>
+									element={<Dashboard />} 
+								/* </ProtectedRoute>
+							} */
 						/>
 						<Route path='/dashboardChart' element={<DashboardChart />} />
-
-						<Route path='/contact' element={<Contact />} />
+						<Route path='/expenses' element={<Expenses />} />
+						<Route path='/income' element={<Income />} />
+						<Route path='/categories' element={<Categories />} />
 						<Route path='*' element={<h1>Page not found</h1>} />
 					</Routes>
 				</Router>

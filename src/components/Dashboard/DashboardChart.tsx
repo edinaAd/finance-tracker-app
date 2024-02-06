@@ -6,7 +6,7 @@ const DashboardChart = () => {
 
     return (
         <Chart
-        style={{ maxHeight: '400px', marginTop: '40px' }} // Set the height here
+        style={{ marginTop: '40px' }} // Set the height here
 
         option={{
             legend: {},
@@ -26,7 +26,9 @@ const DashboardChart = () => {
             series: [
               { type: 'bar' }, // Expenses series
               { type: 'bar' }  // Income series
-            ]
+            ],
+            // height: '250px'
+
           }}
         />
     )
