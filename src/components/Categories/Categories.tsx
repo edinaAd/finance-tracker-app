@@ -5,13 +5,9 @@ import { useEffect } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete';
 import './Categories.scss';
 import React from 'react';
+import ExpensesContent from './ExpensesContent/ExpensesContent';
 
-const ExpensesContent = () => (
-  <div>
-    <h2>Expenses Content</h2>
-    {/* Add your content specific to Expenses tab */}
-  </div>
-);
+
 
 // Define a component for Income tab content
 const IncomeContent = () => (

@@ -1,0 +1,16 @@
+@import 'variables/variables';
+
+.category-div {
+    width: 35px;
+    height: 35px;
+    background: $backgroundColor;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & svg {
+        width: 15px;
+        height: 15px;
+    }
+}

@@ -1,13 +1,24 @@
 import { Box, Button, CssBaseline, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Toolbar } from '@mui/material'
 import Header from 'components/Header/Header'
 import Navbar from 'components/Navbar/Navbar'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ExpensesChart from './ExpensesChart';
 import './Expenses.scss';
+import AddExpense from './AddExpense/AddExpense';
 
 const Expenses = () => {
+	const [open, setOpen] = useState(false);
+
+	const handleClickOpen = () => {
+	  setOpen(true);
+	};
+  
+	const handleClose = () => {
+	  setOpen(false);
+	};
+  
 	useEffect(() => {
 		// Change body background color when the component mounts
 		document.body.style.backgroundColor = '#f0f0f0';
@@ -45,7 +56,9 @@ const Expenses = () => {
 				<Box component="main" sx={{ flexGrow: 1, padding: '0px 24px', overflowY: 'auto' }}>
 					<Toolbar />
 					<div className='expenses-button flex justify-end mb-4'>
-						<Button variant="contained">Add New</Button>
+						<Button variant="contained" onClick={handleClickOpen}>Add New</Button>
+						<AddExpense open={open} onClose={handleClose} />
+
 					</div>
 					<TableContainer component={Paper} sx={{
 						maxHeight: 200, // Adjust the max-height as needed
