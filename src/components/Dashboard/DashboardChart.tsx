@@ -6,7 +6,7 @@ const DashboardChart = () => {
 
     return (
         <Chart
-        style={{ marginTop: '40px' }} // Set the height here
+        style={{ marginTop: '40px' }} 
 
         option={{
             legend: {},
@@ -18,14 +18,13 @@ const DashboardChart = () => {
                 ['Feb', 1500, 2200],
                 ['Mar', 1200, 2500],
                 ['Apr', 1800, 2300],
-                // Add more data rows as needed...
               ]
             },
             xAxis: { type: 'category' },
             yAxis: {},
             series: [
-              { type: 'bar' }, // Expenses series
-              { type: 'bar' }  // Income series
+              { type: 'bar' }, 
+              { type: 'bar' }  
             ],
             // height: '250px'
 

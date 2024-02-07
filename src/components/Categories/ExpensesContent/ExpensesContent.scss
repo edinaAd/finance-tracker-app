@@ -1,6 +1,5 @@
 @import 'variables/variables';
 
-
 .rounded-div {
     width: 60px;
     height: 60px;
@@ -13,5 +12,11 @@
     & svg {
         width: 30px;
         height: 30px;
+    }
+
+    &:hover {
+        box-shadow: 0 4px 15px rgba(5, 5, 6, .1);
+        transform: scale(1.1);
+        transition: all .3s ease-in-out;
     }
 }

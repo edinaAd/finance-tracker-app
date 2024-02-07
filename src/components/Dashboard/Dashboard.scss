@@ -29,6 +29,7 @@
 .user-info .MuiSvgIcon-root {
     width: 5rem;
     height: 5rem;
+    fill: #D94297;
 }
 
 .logout-button {
@@ -38,5 +39,34 @@
         width: 90%;
         background-color: $primaryColor;
         font-weight: bold;
+        border-radius: 10px;
     }
+}
+
+.amount-color {
+    &-income {
+        color: #129B0F;
+    }
+
+    &-expense {
+        color: #FF0000;
+    }
+
+    &-balance {
+        color: #6469F0;
+    }
+}
+
+.dashboard-chart-container {
+    background: white;
+    border-radius: 10px;
+    margin-top: 20px;
+    padding: 5px;
+}
+
+.total-income:hover,
+.balance:hover {
+    box-shadow: 0 4px 15px rgba(5, 5, 6, .1);
+    transform: scale(1.1);
+    transition: all .3s ease-in-out;
 }

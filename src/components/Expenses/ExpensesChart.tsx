@@ -12,13 +12,13 @@ const ExpensesChart = () => {
                     legend: {
                         orient: 'vertical',
                         left: 'right',
-                        top: 'middle', // Move legend to the middle vertically
+                        top: 'middle', 
                     },
                     series: [
                         {
                             name: 'Access From',
                             type: 'pie',
-                            radius: ['40%', '70%'], // Set the radius to create a donut
+                            radius: ['40%', '70%'], 
                             data: [
                                 { value: 1048, name: 'Search Engine' },
                                 { value: 735, name: 'Direct' },

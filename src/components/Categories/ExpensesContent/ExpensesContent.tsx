@@ -8,7 +8,7 @@ const ExpensesContent = () => (
             <div className='col-span-2'>
                 <div className='flex justify-center'>
                     <div className='rounded-div'>
-                        <RestaurantIcon />
+                        <RestaurantIcon sx={{fill: 'red'}} />
                     </div>
                 </div>
                 <div className='flex justify-center'>
@@ -18,7 +18,7 @@ const ExpensesContent = () => (
             <div className='col-span-2'>
                 <div className='flex justify-center'>
                     <div className='rounded-div'>
-                        <RestaurantIcon />
+                        <RestaurantIcon sx={{fill: 'blue'}} />
                     </div>
                 </div>
                 <div className='flex justify-center'>
@@ -28,7 +28,7 @@ const ExpensesContent = () => (
             <div className='col-span-2'>
                 <div className='flex justify-center'>
                     <div className='rounded-div'>
-                        <RestaurantIcon />
+                        <RestaurantIcon sx={{fill: 'pink'}} />
                     </div>
                 </div>
                 <div className='flex justify-center'>
@@ -38,7 +38,7 @@ const ExpensesContent = () => (
             <div className='col-span-2'>
                 <div className='flex justify-center'>
                     <div className='rounded-div'>
-                        <RestaurantIcon />
+                        <RestaurantIcon sx={{fill: 'green'}} />
                     </div>
                 </div>
                 <div className='flex justify-center'>
@@ -48,7 +48,7 @@ const ExpensesContent = () => (
             <div className='col-span-2'>
                 <div className='flex justify-center'>
                     <div className='rounded-div'>
-                        <RestaurantIcon />
+                        <RestaurantIcon sx={{fill: 'purple'}} />
                     </div>
                 </div>
                 <div className='flex justify-center'>
@@ -58,7 +58,7 @@ const ExpensesContent = () => (
             <div className='col-span-2'>
                 <div className='flex justify-center'>
                     <div className='rounded-div'>
-                        <RestaurantIcon />
+                        <RestaurantIcon sx={{fill: 'lightblue'}} />
                     </div>
                 </div>
                 <div className='flex justify-center'>

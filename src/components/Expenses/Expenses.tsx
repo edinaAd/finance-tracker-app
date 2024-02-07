@@ -61,7 +61,7 @@ const Expenses = () => {
 
 					</div>
 					<TableContainer component={Paper} sx={{
-						maxHeight: 200, // Adjust the max-height as needed
+						maxHeight: 200, 
 						overflowY: 'auto'
 					}}>
 						<Table sx={{ minWidth: 650 }} aria-label="simple table">
