@@ -6,7 +6,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import './Navbar.scss';
 
 const Navbar = () => {
-    const { logout } = UserAuth();
+    const { logout } = UserAuth()  ?? {};
 	const { user } = UserAuth();
     const location = useLocation();
 
@@ -21,20 +21,19 @@ const Navbar = () => {
 			throw (error);
 		}
 	};
-	const leftDrawerWidth = 240;
-	const rightDrawerWidth = 300;
+	const rawerWidth = 240;
 
     return (
         <Drawer
             variant="permanent"
             sx={{
-                width: leftDrawerWidth,
+                width: rawerWidth,
                 flexShrink: 0,
                 [`& .MuiDrawer-paper`]: {
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    width: leftDrawerWidth,
+                    width: rawerWidth,
                     boxSizing: 'border-box',
                     height: `calc(100vh - 120px)`,
                     borderRadius: '10px',
@@ -50,14 +49,14 @@ const Navbar = () => {
             <Box sx={{ overflow: 'auto' }}>
                 <div className='user-info'>
                     <span className='flex justify-center'><AccountCircleIcon /></span>
-                    <h1 className='flex justify-center capitalize'>{user?.displayName || 'Guest'}</h1>
+                    <h1 className='flex justify-center capitalize'>{user?.name || 'Guest'}</h1>
                 </div>
                 <Divider />
                 <List>
                     {['dashboard', 'expenses', 'income', 'categories'].map((text, index) => (
                         <React.Fragment key={text}>
                             <ListItem disablePadding>
-                                <ListItemButton component="div" // Use div as component
+                                <ListItemButton component="div"
                                     sx={{
                                         backgroundColor: location.pathname === `/${text}` ? '#f0f0f0ba' : 'inherit',
                                     }}
@@ -65,7 +64,7 @@ const Navbar = () => {
                                     <ListItemText primary={text.charAt(0).toUpperCase() + text.slice(1)} />
                                 </ListItemButton>
                             </ListItem>
-                            {index < 3 && <Divider />} {/* Add Divider only for the first 3 items */}
+                            {index < 3 && <Divider />} 
                         </React.Fragment>
                     ))}
                 </List>

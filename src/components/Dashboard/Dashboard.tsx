@@ -1,6 +1,7 @@
 import { AppBar, Box, CssBaseline, Toolbar, Typography } from '@mui/material';
 import Header from 'components/Header/Header';
 import Navbar from 'components/Navbar/Navbar';
+import { UserAuth } from 'context/AuthContext';
 import { useEffect } from 'react'
 import './Dashboard.scss';
 import DashboardChart from './DashboardChart';
@@ -15,8 +16,11 @@ const Dashboard = () => {
 			document.body.style.backgroundColor = '';
 		};
 	}, []);
+	const { user } = UserAuth() ?? {};
+	console.log(user)
+
 	return (
-		<div>
+		<div> 
 			<Box sx={{ display: 'flex', margin: '30px' }}>
 				<CssBaseline />
 				<Header />

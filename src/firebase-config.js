@@ -1,15 +1,16 @@
 import { initializeApp } from "firebase/app";
 import  { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDRNsmtvSr7JNMXqq9tLTKgzGFhy_5erLg",
-  authDomain: "finance-tracker-dfa80.firebaseapp.com",
-  projectId: "finance-tracker-dfa80",
-  storageBucket: "finance-tracker-dfa80.appspot.com",
-  messagingSenderId: "247543574232",
-  appId: "1:247543574232:web:d4788c68a837df977c31ad"
+  apiKey: "AIzaSyClJHtV6gJv1zUz1csh9BFlM-x1_FQxuLs",
+  authDomain: "fir-tracker-6c099.firebaseapp.com",
+  projectId: "fir-tracker-6c099",
+  storageBucket: "fir-tracker-6c099.appspot.com",
+  messagingSenderId: "972123309381",
+  appId: "1:972123309381:web:814498c56ccbd21a1d6a2c"
 };
 
 // Initialize Firebase
@@ -18,3 +19,5 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
 export default app;
+
+export const db = getFirestore(app)

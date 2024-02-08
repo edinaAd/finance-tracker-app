@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 
 import './Login.scss';
 import { Link } from 'react-router-dom';
-import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 import { UserAuth } from 'context/AuthContext';
 
 
@@ -32,7 +31,12 @@ const Login = () => {
 		setError('')
 		console.log(loginEmail, loginPassword)
 		try {
-			await login(loginEmail, loginPassword);
+
+			const response = await login(loginEmail, loginPassword);
+			console.log(response)
+			const authToken = response.data.idToken;
+
+			localStorage.setItem('authToken', authToken);
 			navigate('/dashboard');
 
 		} catch (error: any) {
