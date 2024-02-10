@@ -1,11 +1,11 @@
 import { Box, Button, CssBaseline, styled, Tab, Tabs, Toolbar } from '@mui/material'
 import Header from 'components/Header/Header'
 import Navbar from 'components/Navbar/Navbar'
-import { useEffect } from 'react'
-import DeleteIcon from '@mui/icons-material/Delete';
+import { useEffect, useState } from 'react'
 import './Categories.scss';
 import React from 'react';
 import ExpensesContent from './ExpensesContent/ExpensesContent';
+
 
 
 
@@ -40,6 +40,7 @@ const StyledTabs = styled(Tabs)(({ theme }: any) => ({
 }));
 
 const Categories = () => {
+	
 	const [value, setValue] = React.useState(0);
 
 	const handleChange = (event: any, newValue: any) => {
@@ -57,13 +58,15 @@ const Categories = () => {
 
 	return (
 		<div>
+
 			<Box sx={{ display: 'flex', margin: '30px' }}>
+
 				<CssBaseline />
 				<Header />
 				<Navbar />
 				<Box component="main" sx={{ flexGrow: 1, padding: '0px 24px', overflowY: 'auto' }}>
 					<Toolbar />
-
+	
 					<StyledTabs
 						value={value}
 						onChange={handleChange}

@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase-config';
 import axios from 'axios';
+import { addUserToFirestore } from 'api/api-users';
 
 type User = {
 	name: string;
@@ -36,8 +37,13 @@ export const AuthContextProvider = ({ children }: any) => {
 				returnSecureToken: true
 			});
 
+			const authToken = response.data.idToken;
+
+			await addUserToFirestore(email, name, response.data.localId, authToken);
+			
 			console.log('User created successfully.');
 			console.log('ID Token:', response.data.idToken);
+
 		} catch (error: any) {
 			console.error('Error creating user:', error.message);
 		}
@@ -72,6 +78,8 @@ export const AuthContextProvider = ({ children }: any) => {
 		try {
 			await signOut(auth);
 			localStorage.removeItem('userData');
+			localStorage.removeItem('authToken');
+
 			setUser(null);
 		  } catch (error: any) {
 			console.error('Error logging out:', error.message);
