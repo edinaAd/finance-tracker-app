@@ -17,7 +17,6 @@ const Dashboard = () => {
 		};
 	}, []);
 	const { user } = UserAuth() ?? {};
-	console.log(user)
 
 	return (
 		<div> 

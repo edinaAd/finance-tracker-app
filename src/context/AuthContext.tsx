@@ -5,8 +5,12 @@ import axios from 'axios';
 import { addUserToFirestore } from 'api/api-users';
 
 type User = {
-	name: string;
+	name?: string;
+	authToken?: string;
+    userId?: string;
+	loginRedirect?: boolean;
 };
+
 
 type UserContextType = {
 	createUser: (email: string, password: string) => Promise<void>;
@@ -19,12 +23,17 @@ const UserContext = createContext<any>(null)
 
 
 export const AuthContextProvider = ({ children }: any) => {
+	console.log("AuthContextProvider");
 	const [user, setUser] = useState<User | null>(null);
 
 	useEffect(() => {
 		const userData = localStorage.getItem('userData');
+		console.log("userData", userData);
 		if (userData) {
-			setUser(JSON.parse(userData));
+			const parsedUserData = JSON.parse(userData);
+			setUser(parsedUserData.user);
+		} else {
+			setUser({ loginRedirect: true });
 		}
 	}, []);
 
@@ -38,9 +47,10 @@ export const AuthContextProvider = ({ children }: any) => {
 			});
 
 			const authToken = response.data.idToken;
+			const userId = response.data.localId;
 
-			await addUserToFirestore(email, name, response.data.localId, authToken);
-			
+			await addUserToFirestore(email, name, userId, authToken);
+
 			console.log('User created successfully.');
 			console.log('ID Token:', response.data.idToken);
 
@@ -57,13 +67,18 @@ export const AuthContextProvider = ({ children }: any) => {
 				returnSecureToken: true
 			});
 
-			const userData = { name: response.data.displayName };
+			console.log(response)
+			const userData: User = {
+				name: response.data.displayName,
+				authToken: response.data.idToken,
+				userId: response.data.localId
+			};
 
-			localStorage.setItem('userData', JSON.stringify(userData));
+            localStorage.setItem('userData', JSON.stringify({ user: userData }));
 
 			setUser(userData);
 
-
+			
 			console.log('User logged in successfully.');
 			console.log('ID Token:', response.data.idToken);
 
@@ -81,9 +96,9 @@ export const AuthContextProvider = ({ children }: any) => {
 			localStorage.removeItem('authToken');
 
 			setUser(null);
-		  } catch (error: any) {
+		} catch (error: any) {
 			console.error('Error logging out:', error.message);
-		  }
+		}
 	}
 	// const logout = () => {
 	// 	return signOut(auth)

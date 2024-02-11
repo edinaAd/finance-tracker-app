@@ -1,13 +1,65 @@
 import { Box, Button, CssBaseline, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Toolbar } from '@mui/material'
 import Header from 'components/Header/Header'
 import Navbar from 'components/Navbar/Navbar'
-import { useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import './Income.scss';
 import IncomeChart from './IncomeChart';
+import { fetchIncomes } from 'api/api-users';
+import { UserAuth } from 'context/AuthContext';
+
+
 
 const Income = () => {
+	console.log("INCOME");
+    const { user } = UserAuth();
+
+	// console.log(user?.authToken, user.userId)
+
+	const [incomes, setIncomes] = useState<any[]>([]);
+	const [chartData, setChartData] = useState<{name: string, value: number}[]>([]);
+
+    useEffect(() => {
+        const fetchUserIncomes = async () => {
+			try {
+				
+				let incomesData = await fetchIncomes(user?.userId, user?.authToken);
+				console.log(incomesData)
+				let chartObj: any = {};
+				incomesData = incomesData.documents.map((document: any) => {
+					const income = document.fields;
+					const category = income.category.stringValue;
+					const total = income.total.integerValue;
+
+					if (chartObj[category]) chartObj[category] += total
+					else chartObj[category] = total;
+					return {
+					docId: document.name.split("/").pop(),
+					name: income?.name?.stringValue,
+					date: income?.date?.timestampValue,
+					total,
+					category: income?.category?.stringValue
+					};
+				})
+
+				setIncomes(incomesData);
+				setChartData(Object.entries(chartObj).map(([key, value]) => {
+					return {
+						name: key,
+						value
+					} as { name: string, value: number}
+				}));
+			} catch (error: any) {
+				console.log(error);
+				console.error('Error fetching incomes:', error.message);
+			}
+		};
+	
+
+        fetchUserIncomes();
+    }, [user?.userId, user?.authToken]);
+
 	useEffect(() => {
 		// Change body background color when the component mounts
 		document.body.style.backgroundColor = '#f0f0f0';
@@ -18,23 +70,8 @@ const Income = () => {
 		};
 	}, []);
 
+	console.log(incomes)
 
-	function createData(
-		name: string,
-		calories: number,
-		fat: number,
-		carbs: number
-	) {
-		return { name, calories, fat, carbs };
-	}
-
-	const rows = [
-		createData('Frozen yoghurt', 159, 6.0, 24),
-		createData('Ice cream sandwich', 237, 9.0, 37),
-		createData('Eclair', 262, 16.0, 24),
-		createData('Cupcake', 305, 3.7, 67),
-		createData('Gingerbread', 356, 16.0, 49),
-	];
 
 	return (
 		<div>
@@ -56,23 +93,23 @@ const Income = () => {
 								<TableRow>
 									<TableCell><b>Income Name</b></TableCell>
 									<TableCell align="center"><b>Date</b></TableCell>
-									<TableCell align="center"><b>Amount&nbsp;($)</b></TableCell>
+									<TableCell align="center"><b>Total&nbsp;($)</b></TableCell>
 									<TableCell align="center"><b>Category</b></TableCell>
 									<TableCell sx={{ display: 'flex', justifyContent: 'center'}}><b>Action</b></TableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{rows.map((row) => (
+								{incomes.map((income) => (
 									<TableRow
-										key={row.name}
+										key={income.name}
 										sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 									>
-										<TableCell component="th" scope="row">
-											{row.name}
+										<TableCell component="th" scope="income">
+											{income.name}
 										</TableCell>
-										<TableCell align="center">{row.calories}</TableCell>
-										<TableCell align="center">{row.fat}</TableCell>
-										<TableCell align="center">{row.carbs}</TableCell>
+										<TableCell align="center">{income.date.split("T")[0]}</TableCell>
+										<TableCell align="center">{income.total}</TableCell>
+										<TableCell align="center">{income.category}</TableCell>
 										<TableCell align="center">
 											<IconButton aria-label="edit">
 												<EditIcon />
@@ -86,7 +123,8 @@ const Income = () => {
 							</TableBody>
 						</Table>
 					</TableContainer>
-                  <IncomeChart />
+					{ chartData.length > 0 && <IncomeChart data={chartData}/> }
+                  
 				</Box>
 			</Box>
 		</div>

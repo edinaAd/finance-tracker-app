@@ -10,6 +10,7 @@ const Navbar = () => {
 	const { user } = UserAuth();
     const location = useLocation();
 
+    console.log(user)
     const navigate = useNavigate();
 
     const handleLogout = async () => {

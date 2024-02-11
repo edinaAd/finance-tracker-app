@@ -86,8 +86,8 @@ function App() {
 							} */
 						/>
 						<Route path='/dashboardChart' element={<DashboardChart />} />
-						<Route path='/expenses' element={<Expenses />} />
-						<Route path='/income' element={<Income />} />
+						 <Route path='/expenses' element={<Expenses />} />
+						<Route path='income' element={<ProtectedRoute><Income /></ProtectedRoute>} />
 						<Route path='/categories' element={<Categories />} />
 						<Route path='*' element={<h1>Page not found</h1>} />
 					</Routes>

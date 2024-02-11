@@ -7,18 +7,65 @@ import EditIcon from '@mui/icons-material/Edit';
 import ExpensesChart from './ExpensesChart';
 import './Expenses.scss';
 import AddExpense from './AddExpense/AddExpense';
+import { UserAuth } from 'context/AuthContext';
+import { fetchExpenses } from 'api/api-users';
 
 const Expenses = () => {
+
+	const { user } = UserAuth();
+
 	const [open, setOpen] = useState(false);
+	const [expenses, setExpenses] = useState<any[]>([]);
+	const [chartData, setChartData] = useState<{ name: string, value: number }[]>([]);
 
 	const handleClickOpen = () => {
-	  setOpen(true);
+		setOpen(true);
 	};
-  
+
 	const handleClose = () => {
-	  setOpen(false);
+		setOpen(false);
 	};
-  
+
+	useEffect(() => {
+		const fetchUserExpenses = async () => {
+			try {
+
+				let expensesData = await fetchExpenses(user?.userId, user?.authToken);
+				console.log(expensesData)
+				let chartObj: any = {};
+				expensesData = expensesData.documents.map((document: any) => {
+					const expense = document.fields;
+					const category = expense.category.stringValue;
+					const total = expense.total.integerValue;
+
+					if (chartObj[category]) chartObj[category] += total
+					else chartObj[category] = total;
+					return {
+						docId: document.name.split("/").pop(),
+						name: expense?.name?.stringValue,
+						date: expense?.date?.timestampValue,
+						total,
+						category: expense?.category?.stringValue
+					};
+				})
+
+				setExpenses(expensesData);
+				setChartData(Object.entries(chartObj).map(([key, value]) => {
+					return {
+						name: key,
+						value
+					} as { name: string, value: number }
+				}));
+			} catch (error: any) {
+				console.log(error);
+				console.error('Error fetching incomes:', error.message);
+			}
+		};
+
+		fetchUserExpenses();
+	}, [user?.userId, user?.authToken]);
+
+
 	useEffect(() => {
 		// Change body background color when the component mounts
 		document.body.style.backgroundColor = '#f0f0f0';
@@ -29,23 +76,6 @@ const Expenses = () => {
 		};
 	}, []);
 
-
-	function createData(
-		name: string,
-		calories: number,
-		fat: number,
-		carbs: number
-	) {
-		return { name, calories, fat, carbs };
-	}
-
-	const rows = [
-		createData('Frozen yoghurt', 159, 6.0, 24),
-		createData('Ice cream sandwich', 237, 9.0, 37),
-		createData('Eclair', 262, 16.0, 24),
-		createData('Cupcake', 305, 3.7, 67),
-		createData('Gingerbread', 356, 16.0, 49),
-	];
 
 	return (
 		<div>
@@ -61,7 +91,7 @@ const Expenses = () => {
 
 					</div>
 					<TableContainer component={Paper} sx={{
-						maxHeight: 200, 
+						maxHeight: 200,
 						overflowY: 'auto'
 					}}>
 						<Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -71,21 +101,21 @@ const Expenses = () => {
 									<TableCell align="center"><b>Date</b></TableCell>
 									<TableCell align="center"><b>Amount&nbsp;($)</b></TableCell>
 									<TableCell align="center"><b>Category</b></TableCell>
-									<TableCell sx={{ display: 'flex', justifyContent: 'center'}}><b>Action</b></TableCell>
+									<TableCell sx={{ display: 'flex', justifyContent: 'center' }}><b>Action</b></TableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{rows.map((row) => (
+								{expenses.map((expense) => (
 									<TableRow
-										key={row.name}
+										key={expense.name}
 										sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 									>
 										<TableCell component="th" scope="row">
-											{row.name}
+											{expense.name}
 										</TableCell>
-										<TableCell align="center">{row.calories}</TableCell>
-										<TableCell align="center">{row.fat}</TableCell>
-										<TableCell align="center">{row.carbs}</TableCell>
+										<TableCell align="center">{expense.date.split("T")[0]}</TableCell>
+										<TableCell align="center">{expense.total}</TableCell>
+										<TableCell align="center">{expense.category}</TableCell>
 										<TableCell align="center">
 											<IconButton aria-label="edit">
 												<EditIcon />
@@ -99,7 +129,7 @@ const Expenses = () => {
 							</TableBody>
 						</Table>
 					</TableContainer>
-					<ExpensesChart />
+					{ chartData.length > 0 && <ExpensesChart data={chartData} />}
 
 				</Box>
 			</Box>

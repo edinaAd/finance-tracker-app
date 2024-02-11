@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import './Login.scss';
 import { Link } from 'react-router-dom';
 import { UserAuth } from 'context/AuthContext';
+import InfoDialog from 'components/InfoDialog/InfoDialog';
+import { MessageType } from 'types/MessageType.enum';
 
 
 const Login = () => {
@@ -31,7 +33,8 @@ const Login = () => {
 		setError('')
 		console.log(loginEmail, loginPassword)
 		try {
-
+			if (!loginEmail || !loginPassword) return;
+			
 			const response = await login(loginEmail, loginPassword);
 			console.log(response)
 			const authToken = response.data.idToken;
@@ -40,13 +43,14 @@ const Login = () => {
 			navigate('/dashboard');
 
 		} catch (error: any) {
-			setError(error.message);
-			console.log(error.message);
+			if (error.code === "ERR_BAD_REQUEST") setError("Invalid username or password");
+			else setError("Error: Request failed");
 		}
 	}
 
 	return (
 		<div className='login-form'>
+			{error  && <InfoDialog type={MessageType.ERROR} message={error} open={true} />}
 			<div className='container'>
 				<div className='grid grid-cols-12'>
 					<div className='flex justify-center items-center lg:col-span-6 md:col-span-6 col-span-12'>

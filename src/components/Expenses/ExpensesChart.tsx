@@ -1,7 +1,11 @@
 import React from 'react'
 import Chart from "echarts-for-react";
 
-const ExpensesChart = () => {
+interface Props {
+    data: { value: number, name: string}[]
+}
+
+const ExpensesChart:React.FC<Props> = ({data}) => {
     return (
         <div className='chart-container bg-white mt-4 rounded-lg pr-2'>
             <Chart
@@ -19,13 +23,7 @@ const ExpensesChart = () => {
                             name: 'Access From',
                             type: 'pie',
                             radius: ['40%', '70%'], 
-                            data: [
-                                { value: 1048, name: 'Search Engine' },
-                                { value: 735, name: 'Direct' },
-                                { value: 580, name: 'Email' },
-                                { value: 484, name: 'Union Ads' },
-                                { value: 300, name: 'Video Ads' }
-                            ],
+                            data,
                             emphasis: {
                                 itemStyle: {
                                     shadowBlur: 10,
