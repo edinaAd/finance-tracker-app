@@ -27,6 +27,7 @@ const Expenses = () => {
 		setEditExpense(expense);
 		setOpen(true);
 	};
+
 	const handleClose = (response: any | null) => {
 		console.log(response);
 		if(response.fields) {
@@ -130,7 +131,6 @@ const Expenses = () => {
 			console.error('Error deleting expense:', error.message);
 		}
 	};
-	console.log(expenses)
 
 	return (
 		<div>
