@@ -5,15 +5,9 @@ import { useEffect, useState } from 'react'
 import './Categories.scss';
 import React from 'react';
 import ExpensesContent from './ExpensesContent/ExpensesContent';
+import IncomesContent from './IncomesContent/IncomesContent';
 
 
-
-
-const IncomeContent = () => (
-	<div>
-		<h2>Income Content</h2>
-	</div>
-);
 const StyledTabs = styled(Tabs)(({ theme }: any) => ({
 	'& .MuiTabs-indicator': { display: 'none' },
 	'& .MuiTabs-flexContainer': {
@@ -76,7 +70,7 @@ const Categories = () => {
 						<Tab disableRipple label="Income" />
 					</StyledTabs>
 					{value === 0 && <ExpensesContent />}
-					{value === 1 && <IncomeContent />}
+					{value === 1 && <IncomesContent />}
 				</Box>
 
 			</Box>

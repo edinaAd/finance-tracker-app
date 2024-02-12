@@ -8,7 +8,7 @@ import ExpensesChart from './ExpensesChart';
 import './Expenses.scss';
 import AddExpense from './AddExpense/AddExpense';
 import { UserAuth } from 'context/AuthContext';
-import { fetchExpenses } from 'api/api-users';
+import { deleteExpense, fetchExpenses } from 'api/api-users';
 
 const Expenses = () => {
 
@@ -17,13 +17,39 @@ const Expenses = () => {
 	const [open, setOpen] = useState(false);
 	const [expenses, setExpenses] = useState<any[]>([]);
 	const [chartData, setChartData] = useState<{ name: string, value: number }[]>([]);
+	const [editExpense, setEditExpense] = useState(null);
 
 	const handleClickOpen = () => {
 		setOpen(true);
 	};
 
-	const handleClose = () => {
+	const handleEditExpense = (expense: any) => {
+		setEditExpense(expense);
+		setOpen(true);
+	};
+	const handleClose = (response: any | null) => {
+		console.log(response);
+		if(response.fields) {
+		const expense = response.fields;
+		const total =parseFloat(expense.total.integerValue);
+            const updatedObj = {
+                    docId: response.name.split("/").pop(),
+                    name: expense?.name?.stringValue,
+                    date: expense?.date?.timestampValue,
+                    total,
+                    category: expense?.category?.stringValue
+                };
+				const index = expenses.findIndex(x => x.docId === updatedObj.docId);
+				console.log(index);
+				if (index > -1) {
+					expenses[index] = updatedObj;
+				} else {
+					expenses.unshift(updatedObj)
+				}
+			}
+				// setExpenses();
 		setOpen(false);
+		setEditExpense(null);
 	};
 
 	useEffect(() => {
@@ -36,7 +62,7 @@ const Expenses = () => {
 				expensesData = expensesData.documents.map((document: any) => {
 					const expense = document.fields;
 					const category = expense.category.stringValue;
-					const total = expense.total.integerValue;
+					const total =parseFloat(expense.total.integerValue);
 
 					if (chartObj[category]) chartObj[category] += total
 					else chartObj[category] = total;
@@ -50,12 +76,14 @@ const Expenses = () => {
 				})
 
 				setExpenses(expensesData);
-				setChartData(Object.entries(chartObj).map(([key, value]) => {
-					return {
-						name: key,
-						value
-					} as { name: string, value: number }
-				}));
+				setChartData(
+					Object.entries(chartObj).map(([key, value]) => {
+						return {
+							name: key,
+							value
+						} as { name: string, value: number }
+					})
+				);
 			} catch (error: any) {
 				console.log(error);
 				console.error('Error fetching incomes:', error.message);
@@ -76,6 +104,33 @@ const Expenses = () => {
 		};
 	}, []);
 
+	const handleDeleteExpense = async (expenseId: string) => {
+		try {
+			await deleteExpense(user.userId, user.authToken, expenseId);
+			// Update expenses state after deletion
+			setExpenses(prevExpenses => prevExpenses.filter(expense => expense.docId !== expenseId));
+
+			// Update chartData state after deletion
+			const updatedChartData = expenses.filter(expense => expense.docId !== expenseId)
+				.reduce((chartObj: { [key: string]: number }, expense: any) => {
+					const category = expense.category;
+					const total = expense.total;
+					chartObj[category] = (chartObj[category] || 0) + total;
+					return chartObj;
+				}, {});
+
+			setChartData(Object.entries(updatedChartData).map(([key, value]) => {
+				return {
+					name: key,
+					value: value as number
+				};
+			}));
+
+		} catch (error: any) {
+			console.error('Error deleting expense:', error.message);
+		}
+	};
+	console.log(expenses)
 
 	return (
 		<div>
@@ -87,7 +142,7 @@ const Expenses = () => {
 					<Toolbar />
 					<div className='expenses-button flex justify-end mb-4'>
 						<Button variant="contained" onClick={handleClickOpen}>Add New</Button>
-						<AddExpense open={open} onClose={handleClose} />
+						<AddExpense open={open} onClose={handleClose} editExpense={editExpense} />
 
 					</div>
 					<TableContainer component={Paper} sx={{
@@ -117,10 +172,11 @@ const Expenses = () => {
 										<TableCell align="center">{expense.total}</TableCell>
 										<TableCell align="center">{expense.category}</TableCell>
 										<TableCell align="center">
-											<IconButton aria-label="edit">
+											<IconButton aria-label="edit" onClick={() => handleEditExpense(expense)}>
 												<EditIcon />
 											</IconButton>
-											<IconButton aria-label="delete">
+
+											<IconButton aria-label="delete" onClick={() => handleDeleteExpense(expense.docId)}>
 												<DeleteIcon />
 											</IconButton>
 										</TableCell>
@@ -129,7 +185,7 @@ const Expenses = () => {
 							</TableBody>
 						</Table>
 					</TableContainer>
-					{ chartData.length > 0 && <ExpensesChart data={chartData} />}
+					{chartData.length > 0 && <ExpensesChart data={chartData} />}
 
 				</Box>
 			</Box>

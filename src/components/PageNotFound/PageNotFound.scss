@@ -1,0 +1,29 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    height: 100vh;
+    padding: 80px;
+}
+
+.title {
+    font-weight: 900;
+    font-size: 34px;
+    margin-bottom: 20px;
+}
+
+.text {
+    color: #888;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.button {
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 10px 20px;
+    background-color: transparent;
+    color: #333;
+    cursor: pointer;
+    margin-top: 40px;
+    font-size: 16px;
+}

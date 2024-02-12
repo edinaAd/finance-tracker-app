@@ -33,7 +33,10 @@ const Login = () => {
 		setError('')
 		console.log(loginEmail, loginPassword)
 		try {
-			if (!loginEmail || !loginPassword) return;
+			if (!loginEmail || !loginPassword) {
+				setError('Username and password are required');
+				return;
+			}
 			
 			const response = await login(loginEmail, loginPassword);
 			console.log(response)
@@ -43,10 +46,23 @@ const Login = () => {
 			navigate('/dashboard');
 
 		} catch (error: any) {
+			console.log("login",error)
+
 			if (error.code === "ERR_BAD_REQUEST") setError("Invalid username or password");
 			else setError("Error: Request failed");
 		}
 	}
+
+	const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setLoginEmail(e.target.value);
+		setError(''); 
+	};
+	
+	const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setLoginPassword(e.target.value);
+		setError(''); 
+	};
+	
 
 	return (
 		<div className='login-form'>
@@ -64,15 +80,15 @@ const Login = () => {
 									<OutlinedInput
 										id="outlined-adornment-email"
 										label="Email"
-										onChange={(event) => setLoginEmail(event.target.value)}
-									/>
+										onChange={handleEmailChange}
+										/>
 								</FormControl>
 								<FormControl sx={{ mb: 3, width: '65%' }} variant="outlined">
 									<InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
 									<OutlinedInput
 										id="outlined-adornment-password"
 										type={showPassword ? 'text' : 'password'}
-										onChange={(event) => setLoginPassword(event.target.value)}
+										onChange={handlePasswordChange}
 										endAdornment={
 											<InputAdornment position="end">
 												<IconButton

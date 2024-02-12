@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
-import './ExpensesContent.scss';
 import { fetchCategories } from 'api/api-categories';
 import { categoryIcons } from 'services/service';
 import { UserAuth } from 'context/AuthContext';
 
 
-const ExpensesContent = () => {
+const IncomesContent = () => {
     const { user } = UserAuth();
 
     const [categories, setCategories] = useState([]);
@@ -18,7 +17,7 @@ const ExpensesContent = () => {
 
         fetchCategories(user.authToken)
             .then((categoriesData: any) => {
-                const expenseCategories = categoriesData.filter((category: any) => category.type === 'expenses');
+                const expenseCategories = categoriesData.filter((category: any) => category.type === 'incomes');
 
                 console.log(categoriesData)
                 setCategories(expenseCategories);
@@ -51,4 +50,4 @@ const ExpensesContent = () => {
 
 }
 
-export default ExpensesContent
+export default IncomesContent;

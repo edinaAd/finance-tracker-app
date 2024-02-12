@@ -9,8 +9,6 @@ import IncomeChart from './IncomeChart';
 import { fetchIncomes } from 'api/api-users';
 import { UserAuth } from 'context/AuthContext';
 
-
-
 const Income = () => {
 	console.log("INCOME");
     const { user } = UserAuth();
@@ -30,7 +28,7 @@ const Income = () => {
 				incomesData = incomesData.documents.map((document: any) => {
 					const income = document.fields;
 					const category = income.category.stringValue;
-					const total = income.total.integerValue;
+					const total = parseFloat(income.total.integerValue);
 
 					if (chartObj[category]) chartObj[category] += total
 					else chartObj[category] = total;

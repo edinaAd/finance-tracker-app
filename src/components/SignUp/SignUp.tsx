@@ -6,6 +6,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import './SignUp.scss';
 import { UserAuth } from 'context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
+import InfoDialog from 'components/InfoDialog/InfoDialog';
+import { MessageType } from 'types/MessageType.enum';
 
 const SignUp = () => {
 	const [registerEmail, setRegisterEmail] = useState("");
@@ -27,16 +29,38 @@ const SignUp = () => {
 		e.preventDefault();
 		setError('');
 		try {
+			if (!name || !registerEmail || !registerPassword) {
+				setError('All fields are required!');
+				return;
+			}
+
 			await createUser(registerEmail, registerPassword, name);
-			navigate('/')
-		} catch (e: any) {
-			setError(e.message);
-			console.log(e.message);
+			// navigate('/')
+		} catch (error: any) {
+			console.log("signup",error)
+			if (error.code === "ERR_BAD_REQUEST") setError("Invalid username or password");
+			else setError("Error: Request failed");
 		}
+	};
+
+	const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setName(e.target.value);
+		setError(''); 
+	};
+
+	const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setRegisterEmail(e.target.value);
+		setError(''); 
+	};
+
+	const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setRegisterPassword(e.target.value);
+		setError(''); 
 	};
 
 	return (
 		<div className='signup-form'>
+			{error && <InfoDialog type={MessageType.ERROR} message={error} open={true} />}
 			<div className='container'>
 				<div className='grid grid-cols-12'>
 					<div className='flex justify-center items-center lg:col-span-6 md:col-span-6 col-span-12'>
@@ -50,7 +74,7 @@ const SignUp = () => {
 									<OutlinedInput
 										id="outlined-adornment-name"
 										label="Name"
-										onChange={(event) => setName(event.target.value)}
+										onChange={handleNameChange}
 									/>
 								</FormControl>
 								<FormControl sx={{ mb: 3, width: '60%' }} variant="outlined">
@@ -58,8 +82,7 @@ const SignUp = () => {
 									<OutlinedInput
 										id="outlined-adornment-email"
 										label="Email"
-										onChange={(event) => setRegisterEmail(event.target.value)}
-
+										onChange={handleEmailChange}
 									/>
 								</FormControl>
 								<FormControl sx={{ mb: 3, width: '60%' }} variant="outlined">
@@ -67,7 +90,7 @@ const SignUp = () => {
 									<OutlinedInput
 										id="outlined-adornment-password"
 										type={showPassword ? 'text' : 'password'}
-										onChange={(event) => setRegisterPassword(event.target.value)}
+										onChange={handlePasswordChange}
 										endAdornment={
 											<InputAdornment position="end">
 												<IconButton

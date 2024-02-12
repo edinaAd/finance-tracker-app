@@ -15,8 +15,6 @@ export const fetchCategories = async (authToken: any) => {
             id: doc.name.split('/').pop(),
             name: doc.fields.name.stringValue,
             type: doc.fields.type.stringValue,
-            icon: doc.fields.icon.stringValue,
-            color: doc.fields.color.stringValue
         }));
     } catch (error) {
         console.error('Error fetching categories:', error);

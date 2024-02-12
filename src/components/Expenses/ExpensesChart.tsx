@@ -6,6 +6,7 @@ interface Props {
 }
 
 const ExpensesChart:React.FC<Props> = ({data}) => {
+    console.log(data)
     return (
         <div className='chart-container bg-white mt-4 rounded-lg pr-2'>
             <Chart

@@ -1,23 +1,87 @@
-import { AppBar, Box, CssBaseline, Toolbar, Typography } from '@mui/material';
+import { Box, CssBaseline, Toolbar, Typography } from '@mui/material';
+import { fetchExpenses, fetchIncomes } from 'api/api-users';
 import Header from 'components/Header/Header';
 import Navbar from 'components/Navbar/Navbar';
 import { UserAuth } from 'context/AuthContext';
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import './Dashboard.scss';
 import DashboardChart from './DashboardChart';
+interface ExpenseData {
+    [date: string]: number; // Index signature indicating that the object can be indexed by string keys, which return values of type number.
+}
 
 const Dashboard = () => {
+	const { user } = UserAuth() ?? {};
+
+	const [totalExpenses, setTotalExpenses] = useState(0);
+	const [totalIncome, setTotalIncome] = useState(0);
+	const [chartData, setChartData] = useState<any>([]);
+
+
+	const balance = totalIncome - totalExpenses;
+
 	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				// Fetch expenses data
+				const expensesData = await fetchExpenses(user?.userId, user?.authToken);
+				let totalExpenses = 0;
+				const expensesByDate: ExpenseData = {};
+
+
+				expensesData.documents.forEach((document: any) => {
+					const expense = document.fields;
+					const date = new Date(expense.date.timestampValue).toLocaleDateString();
+					totalExpenses += parseFloat(expense.total.integerValue);
+
+					if (expensesByDate[date]) {
+						expensesByDate[date] += parseFloat(expense.total.integerValue);
+					} else {
+						expensesByDate[date] = parseFloat(expense.total.integerValue);
+					}				});
+	
+				// Fetch incomes data
+				const incomesData = await fetchIncomes(user?.userId, user?.authToken);
+				let totalIncome = 0;
+				const incomeByDate: ExpenseData = {};
+
+				incomesData.documents.forEach((document: any) => {
+					const income = document.fields;
+					const date = new Date(income.date.timestampValue).toLocaleDateString();
+
+					totalIncome += parseFloat(income.total.integerValue);
+
+					if (incomeByDate[date]) {
+						incomeByDate[date] += parseFloat(income.total.integerValue);
+					} else {
+						incomeByDate[date] = parseFloat(income.total.integerValue);
+					}
+				});
+				const dates = Object.keys({ ...expensesByDate, ...incomeByDate }).sort();
+				const chartData = dates.map(date => [date, expensesByDate[date] || 0, incomeByDate[date] || 0]);
+		
+				console.log(chartData)
+				setChartData(chartData);
+				setTotalExpenses(totalExpenses);
+				setTotalIncome(totalIncome);
+			} catch (error: any) {
+				console.error('Error fetching data:', error.message);
+			}
+		};
+	
+		fetchData();
+	
 		// Change body background color when the component mounts
 		document.body.style.backgroundColor = '#f0f0f0';
-
+	
 		// Revert back to original background color when the component unmounts
 		return () => {
 			document.body.style.backgroundColor = '';
 		};
-	}, []);
-	const { user } = UserAuth() ?? {};
+	}, [user?.userId, user?.authToken]);
 
+
+	console.log(chartData)
 	return (
 		<div> 
 			<Box sx={{ display: 'flex', margin: '30px' }}>
@@ -29,13 +93,13 @@ const Dashboard = () => {
 					<div className='grid grid-cols-12 gap-7'>
 						<div className='md:col-span-6 lg:col-span-6 col-span-12'>
 							<div className='total-income'>
-								<span className='flex justify-center font-bold amount-color-income'>$43,300</span>
+								<span className='flex justify-center font-bold amount-color-income'>+ ${totalIncome}</span>
 								<span className='flex justify-center'>Income</span>
 							</div>
 						</div>
 						<div className='md:col-span-6 lg:col-span-6 col-span-12'>
 							<div className='total-income'>
-								<span className='flex justify-center font-bold amount-color-expense'>$43,300</span>
+								<span className='flex justify-center font-bold amount-color-expense'>- ${totalExpenses}</span>
 								<span className='flex justify-center'>Expenses</span>
 							</div>
 						</div>
@@ -43,13 +107,13 @@ const Dashboard = () => {
 					<div className='grid grid-cols-12'>
 						<div className='col-span-12 flex justify-center'>
 							<div className='balance'>
-								<span className='flex justify-center font-bold amount-color-balance'>$43,300</span>
+								<span className='flex justify-center font-bold amount-color-balance'>${balance}</span>
 								<span className='flex justify-center'>Balance</span>
 							</div>
 						</div>
 					</div>
 					<div className='dashboard-chart-container'>
-						<DashboardChart />
+						<DashboardChart data={chartData} />
 					</div>
 				</Box>
 			</Box>

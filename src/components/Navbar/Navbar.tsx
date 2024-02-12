@@ -54,7 +54,7 @@ const Navbar = () => {
                 </div>
                 <Divider />
                 <List>
-                    {['dashboard', 'expenses', 'income', 'categories'].map((text, index) => (
+                    {['dashboard', 'expenses', 'incomes', 'categories'].map((text, index) => (
                         <React.Fragment key={text}>
                             <ListItem disablePadding>
                                 <ListItemButton component="div"

@@ -56,6 +56,7 @@ export const AuthContextProvider = ({ children }: any) => {
 
 		} catch (error: any) {
 			console.error('Error creating user:', error.message);
+			throw error;
 		}
 	};
 
