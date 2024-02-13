@@ -83,13 +83,6 @@ const AddExpense = ({ open, onClose, editExpense }: any) => {
             setFormData({ ...formData, selectedCategory: '', name: '', total: '' });
         }
     }, [open, editExpense]);
-    // useEffect(() => {
-    //     if (editExpense) {
-    //         setSelectedCategory(editExpense.category || '');
-    //         setName(editExpense.name || '');
-    //         setTotal(editExpense.total || '');
-    //     }
-    // }, [editExpense]);
 
 
     console.log(categories)

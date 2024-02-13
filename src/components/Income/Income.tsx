@@ -27,6 +27,29 @@ const Income = () => {
 		setOpen(true);
 	};
 
+	const calculateChartData = (incomes: any[]) => {
+		const chartObj: any = {};
+		incomes.forEach(income => {
+			const category = income.category;
+			const total = parseFloat(income.total);
+			if (chartObj[category]) {
+				chartObj[category] += total;
+			} else {
+				chartObj[category] = total;
+			}
+		});
+
+		const updatedChartData = Object.entries(chartObj).map(([key, value]) => {
+			return {
+				name: key,
+				value: value as number
+			};
+		});
+
+		return updatedChartData;
+	};
+
+
 	const handleClose = (response: any | null) => {
 		console.log(response);
 		if (response.fields) {
@@ -46,6 +69,10 @@ const Income = () => {
 			} else {
 				incomes.unshift(updatedObj)
 			}
+
+			const updatedChartData = calculateChartData(incomes);
+			setChartData(updatedChartData);
+
 		}
 		setOpen(false);
 		setEditIncome(null);
@@ -105,11 +132,11 @@ const Income = () => {
 	const handleDeleteIncome = async (incomeId: string) => {
 		try {
 			await deleteIncome(user.userId, user.authToken, incomeId);
-			// Update expenses state after deletion
+			// Update incomes state after deletion
 			setIncomes(prevIncomes => prevIncomes.filter(income => income.docId !== incomeId));
 
 			// Update chartData state after deletion
-			const updatedChartData = incomes.filter(expense => expense.docId !== incomeId)
+			const updatedChartData = incomes.filter(income => income.docId !== incomeId)
 				.reduce((chartObj: { [key: string]: number }, income: any) => {
 					const category = income.category;
 					const total = income.total;
@@ -125,7 +152,7 @@ const Income = () => {
 			}));
 
 		} catch (error: any) {
-			console.error('Error deleting expense:', error.message);
+			console.error('Error deleting income:', error.message);
 		}
 	};
 

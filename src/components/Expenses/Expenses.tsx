@@ -27,28 +27,54 @@ const Expenses = () => {
 		setEditExpense(expense);
 		setOpen(true);
 	};
+	
+	const calculateChartData = (expenses: any[]) => {
+		const chartObj: any = {};
+		expenses.forEach(expense => {
+			const category = expense.category;
+			const total = parseFloat(expense.total);
+			if (chartObj[category]) {
+				chartObj[category] += total;
+			} else {
+				chartObj[category] = total;
+			}
+		});
+
+		const updatedChartData = Object.entries(chartObj).map(([key, value]) => {
+			return {
+				name: key,
+				value: value as number
+			};
+		});
+
+		return updatedChartData;
+	};
 
 	const handleClose = (response: any | null) => {
 		console.log(response);
-		if(response.fields) {
-		const expense = response.fields;
-		const total =parseFloat(expense.total.integerValue);
-            const updatedObj = {
-                    docId: response.name.split("/").pop(),
-                    name: expense?.name?.stringValue,
-                    date: expense?.date?.timestampValue,
-                    total,
-                    category: expense?.category?.stringValue
-                };
-				const index = expenses.findIndex(x => x.docId === updatedObj.docId);
-				console.log(index);
-				if (index > -1) {
-					expenses[index] = updatedObj;
-				} else {
-					expenses.unshift(updatedObj)
-				}
+		if (response.fields) {
+			const expense = response.fields;
+			const total = parseFloat(expense.total.integerValue);
+			const updatedObj = {
+				docId: response.name.split("/").pop(),
+				name: expense?.name?.stringValue,
+				date: expense?.date?.timestampValue,
+				total,
+				category: expense?.category?.stringValue
+			};
+			const index = expenses.findIndex(x => x.docId === updatedObj.docId);
+			console.log(index);
+			if (index > -1) {
+				expenses[index] = updatedObj;
+			} else {
+				expenses.unshift(updatedObj)
 			}
-				// setExpenses();
+
+			const updatedChartData = calculateChartData(expenses);
+			setChartData(updatedChartData);
+
+		}
+		// setExpenses();
 		setOpen(false);
 		setEditExpense(null);
 	};
@@ -63,7 +89,7 @@ const Expenses = () => {
 				expensesData = expensesData.documents.map((document: any) => {
 					const expense = document.fields;
 					const category = expense.category.stringValue;
-					const total =parseFloat(expense.total.integerValue);
+					const total = parseFloat(expense.total.integerValue);
 
 					if (chartObj[category]) chartObj[category] += total
 					else chartObj[category] = total;
@@ -87,7 +113,7 @@ const Expenses = () => {
 				);
 			} catch (error: any) {
 				console.log(error);
-				console.error('Error fetching incomes:', error.message);
+				console.error('Error fetching expenses:', error.message);
 			}
 		};
 
