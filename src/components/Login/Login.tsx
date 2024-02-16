@@ -12,6 +12,7 @@ import { MessageType } from 'types/MessageType.enum';
 
 
 const Login = () => {
+	const { login } = UserAuth();
 	const navigate = useNavigate();
 
 	const [loginEmail, setLoginEmail] = useState("");
@@ -26,7 +27,6 @@ const Login = () => {
 		event.preventDefault();
 	};
 
-	const { login } = UserAuth();
 
 	const handleLogin = async (e: any) => {
 		e.preventDefault();

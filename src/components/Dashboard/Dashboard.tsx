@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import './Dashboard.scss';
 import DashboardChart from './DashboardChart';
 interface ExpenseData {
-    [date: string]: number; // Index signature indicating that the object can be indexed by string keys, which return values of type number.
+	[date: string]: number;
 }
 
 const Dashboard = () => {
@@ -38,8 +38,9 @@ const Dashboard = () => {
 						expensesByDate[date] += parseFloat(expense.total.integerValue);
 					} else {
 						expensesByDate[date] = parseFloat(expense.total.integerValue);
-					}				});
-	
+					}
+				});
+
 				// Fetch incomes data
 				const incomesData = await fetchIncomes(user?.userId, user?.authToken);
 				let totalIncome = 0;
@@ -59,7 +60,7 @@ const Dashboard = () => {
 				});
 				const dates = Object.keys({ ...expensesByDate, ...incomeByDate }).sort();
 				const chartData = dates.map(date => [date, expensesByDate[date] || 0, incomeByDate[date] || 0]);
-		
+
 				console.log(chartData)
 				setChartData(chartData);
 				setTotalExpenses(totalExpenses);
@@ -68,12 +69,12 @@ const Dashboard = () => {
 				console.error('Error fetching data:', error.message);
 			}
 		};
-	
+
 		fetchData();
-	
+
 		// Change body background color when the component mounts
 		document.body.style.backgroundColor = '#f0f0f0';
-	
+
 		// Revert back to original background color when the component unmounts
 		return () => {
 			document.body.style.backgroundColor = '';
@@ -83,7 +84,7 @@ const Dashboard = () => {
 
 	console.log(chartData)
 	return (
-		<div> 
+		<div>
 			<Box sx={{ display: 'flex', margin: '30px' }}>
 				<CssBaseline />
 				<Header />
@@ -113,7 +114,7 @@ const Dashboard = () => {
 						</div>
 					</div>
 					<div className='dashboard-chart-container'>
-						<DashboardChart data={chartData} />
+						{chartData.length > 0 && <DashboardChart data={chartData} />}
 					</div>
 				</Box>
 			</Box>

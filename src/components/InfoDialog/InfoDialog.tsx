@@ -26,6 +26,17 @@ const InfoDialog: React.FC<Props> = ({ type, message, open }) => {
 		setState({ ...state, open: false });
 	};
 
+	const getSnackbarClassName = () => {
+		switch (type) {
+			case MessageType.ERROR:
+				return 'error-snackbar'; 
+			case MessageType.SUCCESS:
+				return 'success-snackbar';
+			default:
+				return '';
+		}
+	};
+
 	return (
 		<div className='info-dialog'>
 			<Snackbar
@@ -34,6 +45,7 @@ const InfoDialog: React.FC<Props> = ({ type, message, open }) => {
 				onClose={handleClose}
 				message={message}
 				key={vertical + horizontal}
+				className={getSnackbarClassName()} 
 			/>
 		</div>
 	)

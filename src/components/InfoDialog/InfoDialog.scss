@@ -1,7 +1,17 @@
-.info-dialog .MuiPaper-root.MuiPaper-elevation {
-    display: flex;
-    justify-content: center;
-    background-color: #D93F62;
-    color: white;
-    font-weight: bold;
+.info-dialog {
+    & .MuiPaper-root.MuiPaper-elevation {
+        display: flex;
+        justify-content: center;
+        font-weight: bold;
+    }
+
+    & .error-snackbar .MuiPaper-root.MuiPaper-elevation {
+        background-color: #D93F62;
+        color: white;
+    }
+
+    & .success-snackbar .MuiPaper-root.MuiPaper-elevation {
+        background-color: #129B0F;
+        color: white;
+    }
 }

@@ -1,5 +1,5 @@
 import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
@@ -12,9 +12,12 @@ import { MessageType } from 'types/MessageType.enum';
 const SignUp = () => {
 	const [registerEmail, setRegisterEmail] = useState("");
 	const [registerPassword, setRegisterPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState('');
 	const [name, setName] = useState("");
 	const [error, setError] = useState('');
-	const navigate = useNavigate();
+	const [showSuccessMessage, setShowSuccessMessage] = useState(false); 
+
+	// const navigate = useNavigate();
 
 	const [showPassword, setShowPassword] = React.useState(false);
 	const { createUser } = UserAuth();
@@ -28,16 +31,27 @@ const SignUp = () => {
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 		setError('');
+
 		try {
-			if (!name || !registerEmail || !registerPassword) {
+			if (!name || !registerEmail || !registerPassword || !confirmPassword) {
 				setError('All fields are required!');
 				return;
 			}
 
+			if (registerPassword !== confirmPassword) {
+				setError('Passwords do not match');
+				return;
+			}
 			await createUser(registerEmail, registerPassword, name);
+			setName('');
+			setRegisterEmail('');
+			setRegisterPassword('');
+			setConfirmPassword('');
+			setShowSuccessMessage(true);
+
 			// navigate('/')
 		} catch (error: any) {
-			console.log("signup",error)
+			console.log("signup", error)
 			if (error.code === "ERR_BAD_REQUEST") setError("Invalid username or password");
 			else setError("Error: Request failed");
 		}
@@ -45,22 +59,37 @@ const SignUp = () => {
 
 	const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setName(e.target.value);
-		setError(''); 
+		setError('');
 	};
 
 	const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setRegisterEmail(e.target.value);
-		setError(''); 
+		setError('');
 	};
 
 	const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setRegisterPassword(e.target.value);
-		setError(''); 
+		setError('');
 	};
+
+	const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setConfirmPassword(e.target.value);
+		setError('');
+	};
+
+	useEffect(() => {
+		if (showSuccessMessage) {
+		  setTimeout(() => {
+			setShowSuccessMessage(false);
+		  }, 3000); 
+		}
+	  }, [showSuccessMessage]);
+	
 
 	return (
 		<div className='signup-form'>
 			{error && <InfoDialog type={MessageType.ERROR} message={error} open={true} />}
+			{showSuccessMessage && <InfoDialog type={MessageType.SUCCESS} message="User created successfully!" open={true} />}
 			<div className='container'>
 				<div className='grid grid-cols-12'>
 					<div className='flex justify-center items-center lg:col-span-6 md:col-span-6 col-span-12'>
@@ -74,6 +103,7 @@ const SignUp = () => {
 									<OutlinedInput
 										id="outlined-adornment-name"
 										label="Name"
+										value={name}
 										onChange={handleNameChange}
 									/>
 								</FormControl>
@@ -82,6 +112,7 @@ const SignUp = () => {
 									<OutlinedInput
 										id="outlined-adornment-email"
 										label="Email"
+										value={registerEmail}
 										onChange={handleEmailChange}
 									/>
 								</FormControl>
@@ -90,6 +121,7 @@ const SignUp = () => {
 									<OutlinedInput
 										id="outlined-adornment-password"
 										type={showPassword ? 'text' : 'password'}
+										value={registerPassword}
 										onChange={handlePasswordChange}
 										endAdornment={
 											<InputAdornment position="end">
@@ -104,6 +136,28 @@ const SignUp = () => {
 											</InputAdornment>
 										}
 										label="Password"
+									/>
+								</FormControl>
+								<FormControl sx={{ mb: 3, width: '60%' }} variant="outlined">
+									<InputLabel htmlFor="outlined-adornment-confirm-password">Confirm Password</InputLabel>
+									<OutlinedInput
+										id="outlined-adornment-confirm-password"
+										type={showPassword ? 'text' : 'password'}
+										value={confirmPassword}
+										onChange={handleConfirmPasswordChange}
+										endAdornment={
+											<InputAdornment position="end">
+												<IconButton
+													aria-label="toggle password visibility"
+													onClick={handleClickShowPassword}
+													onMouseDown={handleMouseDownPassword}
+													edge="end"
+												>
+													{showPassword ? <VisibilityOff /> : <Visibility />}
+												</IconButton>
+											</InputAdornment>
+										}
+										label="Confirm Password"
 									/>
 								</FormControl>
 							</div>
