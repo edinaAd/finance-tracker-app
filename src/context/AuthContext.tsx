@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase-config';
 import axios from 'axios';
-import { addUserToFirestore } from 'api/api-users';
+import { addUserToFirestore } from 'services/users-service';
 
 type User = {
 	name?: string;
@@ -101,9 +101,6 @@ export const AuthContextProvider = ({ children }: any) => {
 			console.error('Error logging out:', error.message);
 		}
 	}
-	// const logout = () => {
-	// 	return signOut(auth)
-	// }
 
 	return (
 		<UserContext.Provider value={{ createUser, user, logout, login }}>

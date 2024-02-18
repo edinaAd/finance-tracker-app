@@ -1,11 +1,12 @@
 import { Dialog, DialogTitle, DialogContent, Tooltip, FormControl, InputLabel, OutlinedInput, DialogActions, Button } from '@mui/material';
-import { fetchCategories } from 'api/api-categories';
-import { updateIncome, addIncome } from 'api/api-users';
+import { fetchCategories } from 'services/categories-service';
 import { UserAuth } from 'context/AuthContext';
 import { useEffect, useState } from 'react'
 import { categoryIcons } from 'services/service';
+import { addIncome, updateIncome } from 'services/users-service';
+import React from 'react';
 
-const AddIncome = ({ open, onClose, editIncome }: any) => {
+const AddIncome = React.memo(({ open, onClose, editIncome }: any) => {
 	const { user } = UserAuth();
 	const [categories, setCategories] = useState([]);
 
@@ -146,6 +147,6 @@ const AddIncome = ({ open, onClose, editIncome }: any) => {
 			</DialogActions>
 		</Dialog>
 	)
-}
+});
 
 export default AddIncome

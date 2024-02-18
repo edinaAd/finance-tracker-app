@@ -6,9 +6,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import './Income.scss';
 import IncomeChart from './IncomeChart';
-import { deleteIncome, fetchIncomes } from 'api/api-users';
 import { UserAuth } from 'context/AuthContext';
 import AddIncome from './AddIncome/AddIncome';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
+import { deleteIncome, fetchIncomes } from 'services/users-service';
 
 const Income = () => {
 	const { user } = UserAuth();
@@ -17,6 +18,8 @@ const Income = () => {
 	const [incomes, setIncomes] = useState<any[]>([]);
 	const [chartData, setChartData] = useState<{ name: string, value: number }[]>([]);
 	const [editIncome, setEditIncome] = useState(null);
+	const [incomesLoading, setIncomesLoading] = useState(false);
+
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -81,25 +84,32 @@ const Income = () => {
 	useEffect(() => {
 		const fetchUserIncomes = async () => {
 			try {
-
+				setIncomesLoading(true);
 				let incomesData = await fetchIncomes(user?.userId, user?.authToken);
 				console.log(incomesData)
 				let chartObj: any = {};
-				incomesData = incomesData.documents.map((document: any) => {
-					const income = document.fields;
-					const category = income.category.stringValue;
-					const total = parseFloat(income.total.integerValue);
 
-					if (chartObj[category]) chartObj[category] += total
-					else chartObj[category] = total;
-					return {
-						docId: document.name.split("/").pop(),
-						name: income?.name?.stringValue,
-						date: income?.date?.timestampValue,
-						total,
-						category: income?.category?.stringValue
-					};
-				})
+				if (incomesData && incomesData.documents && Array.isArray(incomesData.documents)) {
+					incomesData = incomesData.documents.map((document: any) => {
+						const income = document.fields;
+						const category = income.category.stringValue;
+						const total = parseFloat(income.total.integerValue);
+
+						if (chartObj[category]) chartObj[category] += total
+						else chartObj[category] = total;
+						return {
+							docId: document.name.split("/").pop(),
+							name: income?.name?.stringValue,
+							date: income?.date?.timestampValue,
+							total,
+							category: income?.category?.stringValue
+						};
+					})
+					setIncomesLoading(false);
+				} else {
+					setIncomesLoading(false);
+					incomesData = [];
+				}
 
 				setIncomes(incomesData);
 				setChartData(
@@ -108,7 +118,8 @@ const Income = () => {
 							name: key,
 							value
 						} as { name: string, value: number }
-					}));
+					})
+				);
 			} catch (error: any) {
 				console.log(error);
 				console.error('Error fetching incomes:', error.message);
@@ -199,7 +210,7 @@ const Income = () => {
 											<IconButton aria-label="edit" onClick={() => handleEditIncome(income)}>
 												<EditIcon />
 											</IconButton>
-											<IconButton aria-label="delete"  onClick={() => handleDeleteIncome(income.docId)}>
+											<IconButton aria-label="delete" onClick={() => handleDeleteIncome(income.docId)}>
 												<DeleteIcon />
 											</IconButton>
 										</TableCell>
@@ -208,8 +219,20 @@ const Income = () => {
 							</TableBody>
 						</Table>
 					</TableContainer>
-					{chartData.length > 0 && <IncomeChart data={chartData} />}
+					{incomesLoading ? (
+						<div className='loader'>
+							<LoadingSpinner />
+						</div>
+					) : (
+						<div className='dashboard-chart-container'>
 
+							{chartData.length > 0 ? (
+								<IncomeChart data={chartData} />
+							) : (
+								<p className='flex justify-center italic font-bold text-center'>Oops! Something went wrong while fetching incomes. Why not try adding some incomes and see the charts?</p>
+							)}
+						</div>
+					)}
 				</Box>
 			</Box>
 		</div>

@@ -2,3 +2,32 @@
     display: flex;
     justify-content: center;
 }
+
+.categories-tabs {
+    & .MuiTabs-indicator {
+        display: none;
+    }
+
+    & .MuiTabs-flexContainer {
+        border-radius: 10px;
+        background-color: white;
+        width: fit-content;
+        display: flex;
+        justify-content: space-evenly;
+        padding: 15px;
+    }
+
+    & .MuiTab-root {
+        padding: 0.5rem;
+        text-transform: none;
+        min-width: auto;
+        width: 100px;
+
+        &.Mui-selected {
+            background-color: #C7DFF6;
+            color: #0B6EC8;
+            font-weight: bold;
+            border-radius: 10px;
+        }
+    }
+}

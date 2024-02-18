@@ -1,6 +1,5 @@
 import "./LoadingSpinner.scss";
 
-// Check https://loading.io/css for the source of this spinner.
 const LoadingSpinner = () => {
   return (
     <div className='lds'>

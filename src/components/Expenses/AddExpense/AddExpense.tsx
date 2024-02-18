@@ -1,13 +1,12 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, OutlinedInput, Tooltip } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import './AddExpense.scss';
-import { fetchCategories } from 'api/api-categories';
+import { fetchCategories } from 'services/categories-service';
 import { UserAuth } from 'context/AuthContext';
 import { categoryIcons } from 'services/service';
-import { addExpense, updateExpense } from 'api/api-users';
+import { addExpense, updateExpense } from 'services/users-service';
 
-const AddExpense = ({ open, onClose, editExpense }: any) => {
-    console.log(editExpense)
+const AddExpense = React.memo(({ open, onClose, editExpense }: any) => {
     const { user } = UserAuth();
     const [categories, setCategories] = useState([]);
 
@@ -45,7 +44,7 @@ const AddExpense = ({ open, onClose, editExpense }: any) => {
                 // Add new expense
                 response = await addExpense(user.userId, user.authToken, expenseData);
             }
-
+            setButtonClicked(false)
             onClose(response);
         } catch (error: any) {
             console.error('Error adding expense:', error.message);
@@ -84,8 +83,6 @@ const AddExpense = ({ open, onClose, editExpense }: any) => {
         }
     }, [open, editExpense]);
 
-
-    console.log(categories)
     return (
         <Dialog
             open={open}
@@ -143,7 +140,6 @@ const AddExpense = ({ open, onClose, editExpense }: any) => {
             </DialogContent>
             <DialogActions sx={{ padding: '24px' }}>
                 <Button className='close-button' variant="contained" onClick={onClose}>Cancel</Button>
-                {/* <Button className='add-expense-button' variant="contained" onClick={handleAddExpense} autoFocus>Add Expense</Button> */}
                 {!editExpense ?
                     <Button className='add-expense-button' variant="contained" onClick={handleAddExpense} autoFocus>Add Expense</Button>
                     :
@@ -151,6 +147,6 @@ const AddExpense = ({ open, onClose, editExpense }: any) => {
             </DialogActions>
         </Dialog>
     )
-}
+})
 
 export default AddExpense

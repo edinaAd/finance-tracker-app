@@ -1,9 +1,11 @@
 import { Box, CssBaseline, Toolbar, Typography } from '@mui/material';
-import { fetchExpenses, fetchIncomes } from 'api/api-users';
 import Header from 'components/Header/Header';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import Navbar from 'components/Navbar/Navbar';
 import { UserAuth } from 'context/AuthContext';
+import React, { memo } from 'react';
 import { useEffect, useState } from 'react'
+import { fetchExpenses, fetchIncomes } from 'services/users-service';
 import './Dashboard.scss';
 import DashboardChart from './DashboardChart';
 interface ExpenseData {
@@ -16,6 +18,7 @@ const Dashboard = () => {
 	const [totalExpenses, setTotalExpenses] = useState(0);
 	const [totalIncome, setTotalIncome] = useState(0);
 	const [chartData, setChartData] = useState<any>([]);
+	const [loading, setLoading] = useState(false);
 
 
 	const balance = totalIncome - totalExpenses;
@@ -24,12 +27,13 @@ const Dashboard = () => {
 		const fetchData = async () => {
 			try {
 				// Fetch expenses data
+				setLoading(true);
 				const expensesData = await fetchExpenses(user?.userId, user?.authToken);
 				let totalExpenses = 0;
 				const expensesByDate: ExpenseData = {};
 
 
-				expensesData.documents.forEach((document: any) => {
+				expensesData?.documents?.forEach((document: any) => {
 					const expense = document.fields;
 					const date = new Date(expense.date.timestampValue).toLocaleDateString();
 					totalExpenses += parseFloat(expense.total.integerValue);
@@ -46,7 +50,7 @@ const Dashboard = () => {
 				let totalIncome = 0;
 				const incomeByDate: ExpenseData = {};
 
-				incomesData.documents.forEach((document: any) => {
+				incomesData?.documents?.forEach((document: any) => {
 					const income = document.fields;
 					const date = new Date(income.date.timestampValue).toLocaleDateString();
 
@@ -61,11 +65,12 @@ const Dashboard = () => {
 				const dates = Object.keys({ ...expensesByDate, ...incomeByDate }).sort();
 				const chartData = dates.map(date => [date, expensesByDate[date] || 0, incomeByDate[date] || 0]);
 
-				console.log(chartData)
 				setChartData(chartData);
 				setTotalExpenses(totalExpenses);
 				setTotalIncome(totalIncome);
+				setLoading(false);
 			} catch (error: any) {
+				setLoading(false);
 				console.error('Error fetching data:', error.message);
 			}
 		};
@@ -113,13 +118,29 @@ const Dashboard = () => {
 							</div>
 						</div>
 					</div>
-					<div className='dashboard-chart-container'>
-						{chartData.length > 0 && <DashboardChart data={chartData} />}
-					</div>
+					{loading ? (
+						// Show loader while data is being fetched
+						<div className="loader">
+							<LoadingSpinner />
+						</div>
+					) : (
+						// Show chart or no data message based on chartData length
+						<div className='dashboard-chart-container'>
+
+							{chartData.length > 0 ? (
+								<DashboardChart data={chartData} />
+							) : (
+								<div className="no-data-message">
+									<p className='flex justify-center font-bold italic'>No expense or income data found!</p>
+								</div>
+							)}
+						</div>
+
+					)}
 				</Box>
 			</Box>
 		</div>
 	)
 }
 
-export default Dashboard
+export default memo(Dashboard);

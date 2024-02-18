@@ -8,7 +8,8 @@ import ExpensesChart from './ExpensesChart';
 import './Expenses.scss';
 import AddExpense from './AddExpense/AddExpense';
 import { UserAuth } from 'context/AuthContext';
-import { deleteExpense, fetchExpenses } from 'api/api-users';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
+import { deleteExpense, fetchExpenses } from 'services/users-service';
 
 const Expenses = () => {
 
@@ -18,6 +19,7 @@ const Expenses = () => {
 	const [expenses, setExpenses] = useState<any[]>([]);
 	const [chartData, setChartData] = useState<{ name: string, value: number }[]>([]);
 	const [editExpense, setEditExpense] = useState(null);
+	const [expensesLoading, setExpensesLoading] = useState(false);
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -27,7 +29,7 @@ const Expenses = () => {
 		setEditExpense(expense);
 		setOpen(true);
 	};
-	
+
 	const calculateChartData = (expenses: any[]) => {
 		const chartObj: any = {};
 		expenses.forEach(expense => {
@@ -51,7 +53,6 @@ const Expenses = () => {
 	};
 
 	const handleClose = (response: any | null) => {
-		console.log(response);
 		if (response.fields) {
 			const expense = response.fields;
 			const total = parseFloat(expense.total.integerValue);
@@ -63,7 +64,6 @@ const Expenses = () => {
 				category: expense?.category?.stringValue
 			};
 			const index = expenses.findIndex(x => x.docId === updatedObj.docId);
-			console.log(index);
 			if (index > -1) {
 				expenses[index] = updatedObj;
 			} else {
@@ -74,33 +74,39 @@ const Expenses = () => {
 			setChartData(updatedChartData);
 
 		}
-		// setExpenses();
 		setOpen(false);
 		setEditExpense(null);
 	};
 
 	useEffect(() => {
 		const fetchUserExpenses = async () => {
+
 			try {
-
+				setExpensesLoading(true);
 				let expensesData = await fetchExpenses(user?.userId, user?.authToken);
-				console.log(expensesData)
 				let chartObj: any = {};
-				expensesData = expensesData.documents.map((document: any) => {
-					const expense = document.fields;
-					const category = expense.category.stringValue;
-					const total = parseFloat(expense.total.integerValue);
 
-					if (chartObj[category]) chartObj[category] += total
-					else chartObj[category] = total;
-					return {
-						docId: document.name.split("/").pop(),
-						name: expense?.name?.stringValue,
-						date: expense?.date?.timestampValue,
-						total,
-						category: expense?.category?.stringValue
-					};
-				})
+				if (expensesData && expensesData.documents && Array.isArray(expensesData.documents)) {
+					expensesData = expensesData.documents && expensesData.documents.map((document: any) => {
+						const expense = document.fields;
+						const category = expense.category.stringValue;
+						const total = parseFloat(expense.total.integerValue);
+
+						if (chartObj[category]) chartObj[category] += total
+						else chartObj[category] = total;
+						return {
+							docId: document.name.split("/").pop(),
+							name: expense?.name?.stringValue,
+							date: expense?.date?.timestampValue,
+							total,
+							category: expense?.category?.stringValue
+						};
+					})
+					setExpensesLoading(false);
+				} else {
+					setExpensesLoading(false);
+					expensesData = [];
+				}
 
 				setExpenses(expensesData);
 				setChartData(
@@ -211,11 +217,23 @@ const Expenses = () => {
 							</TableBody>
 						</Table>
 					</TableContainer>
-					{chartData.length > 0 && <ExpensesChart data={chartData} />}
+					{expensesLoading ? (
+						<div className='loader'>
+							<LoadingSpinner />
+						</div>
+					) : (
+						<div className='dashboard-chart-container'>
 
+							{chartData.length > 0 ? (
+								<ExpensesChart data={chartData} />
+							) : (
+								<p className='flex justify-center italic font-bold text-center'>Oops! Something went wrong while fetching expenses. Why not try adding some expenses and see the charts?</p>
+							)}
+						</div>
+					)}
 				</Box>
 			</Box>
-		</div>
+		</div >
 	)
 }
 
