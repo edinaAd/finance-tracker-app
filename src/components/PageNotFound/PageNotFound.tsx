@@ -25,7 +25,7 @@ function PageNotFound() {
                 </div>
                 <div className='lg:col-span-6 md:col-span-6 col-span-12'>
                     <div>
-                        <img alt="404 Image" src='https://ui.mantine.dev/_next/static/media/image.11cd6c19.svg' />
+                        <img alt="404 Not Found" src='https://ui.mantine.dev/_next/static/media/image.11cd6c19.svg' />
                     </div>
                 </div>
             </div>
