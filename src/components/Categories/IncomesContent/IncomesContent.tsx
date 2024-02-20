@@ -29,7 +29,7 @@ const IncomesContent = () => {
             .finally(() => {
                 setLoading(false);
             });
-    }, []);
+    }, [user?.authToken]);
 
     return (
         <>

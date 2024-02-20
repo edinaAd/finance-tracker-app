@@ -165,7 +165,7 @@ const Expenses = () => {
 	};
 
 	return (
-		<div>
+		<div className='expenses'>
 			<Box sx={{ display: 'flex', margin: '30px' }}>
 				<CssBaseline />
 				<Header />

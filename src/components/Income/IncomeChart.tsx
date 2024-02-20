@@ -2,10 +2,10 @@ import React from 'react'
 import Chart from "echarts-for-react";
 
 interface Props {
-    data: { value: number, name: string}[]
+    data: { value: number, name: string }[]
 }
 
-const IncomeChart: React.FC<Props> = ({data}) => {
+const IncomeChart: React.FC<Props> = ({ data }) => {
     return (
         <div className='chart-container bg-white mt-4 rounded-lg pr-2'>
             <Chart
@@ -16,13 +16,13 @@ const IncomeChart: React.FC<Props> = ({data}) => {
                     legend: {
                         orient: 'vertical',
                         left: 'right',
-                        top: 'middle', 
+                        top: 'middle',
                     },
                     series: [
                         {
                             name: 'Access From',
                             type: 'pie',
-                            radius: ['40%', '70%'], 
+                            radius: ['40%', '70%'],
                             data,
                             emphasis: {
                                 itemStyle: {

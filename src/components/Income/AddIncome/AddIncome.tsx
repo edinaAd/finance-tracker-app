@@ -61,25 +61,28 @@ const AddIncome = React.memo(({ open, onClose, editIncome }: any) => {
 			.then((categoriesData: any) => {
 				const incomeCategories = categoriesData.filter((category: any) => category.type === 'incomes');
 
-				console.log(categoriesData)
 				setCategories(incomeCategories);
-				console.log('Income Categories:', incomeCategories);
 			})
 			.catch((error) => {
 				console.error('Error fetching categories:', error);
 			});
-	}, []);
+	}, [user?.authToken]);
 
 	useEffect(() => {
 		if (open && editIncome) {
-			setFormData({
-				...formData,
-				selectedCategory: editIncome.category || '',
-				name: editIncome.name || '',
-				total: editIncome.total || ''
-			});
+			setFormData((prevFormData) => ({
+				...prevFormData,
+				selectedCategory: editIncome?.category || '',
+				name: editIncome?.name || '',
+				total: editIncome?.total || ''
+			}));
 		} else {
-			setFormData({ ...formData, selectedCategory: '', name: '', total: '' });
+			setFormData((prevFormData) => ({
+				...prevFormData,
+				selectedCategory: '',
+				name: '',
+				total: ''
+			}));
 		}
 	}, [open, editIncome]);
 

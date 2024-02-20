@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, OutlinedInput, Tooltip } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, OutlinedInput, Tooltip } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import './AddExpense.scss';
 import { fetchCategories } from 'services/categories-service';
@@ -61,25 +61,28 @@ const AddExpense = React.memo(({ open, onClose, editExpense }: any) => {
             .then((categoriesData: any) => {
                 const expenseCategories = categoriesData.filter((category: any) => category.type === 'expenses');
 
-                console.log(categoriesData)
                 setCategories(expenseCategories);
-                console.log('Expense Categories:', expenseCategories);
             })
             .catch((error) => {
                 console.error('Error fetching categories:', error);
             });
-    }, []);
+    }, [user?.authToken]);
 
     useEffect(() => {
         if (open && editExpense) {
-            setFormData({
-                ...formData,
+            setFormData((prevFormData) => ({
+                ...prevFormData,
                 selectedCategory: editExpense.category || '',
                 name: editExpense.name || '',
                 total: editExpense.total || ''
-            });
+            }));
         } else {
-            setFormData({ ...formData, selectedCategory: '', name: '', total: '' });
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                selectedCategory: '',
+                name: '',
+                total: ''
+            }));
         }
     }, [open, editExpense]);
 

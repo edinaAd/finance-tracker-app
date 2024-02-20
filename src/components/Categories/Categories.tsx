@@ -15,7 +15,7 @@ const Categories = () => {
 	const handleChange = (event: any, newValue: any) => {
 		setValue(newValue);
 	};
-	
+
 	useEffect(() => {
 		// Change body background color when the component mounts
 		document.body.style.backgroundColor = '#f0f0f0';

@@ -1,11 +1,10 @@
-import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material';
+import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
 import './SignUp.scss';
 import { UserAuth } from 'context/AuthContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import InfoDialog from 'components/InfoDialog/InfoDialog';
 import { MessageType } from 'types/MessageType.enum';
 
@@ -15,9 +14,7 @@ const SignUp = () => {
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const [name, setName] = useState("");
 	const [error, setError] = useState('');
-	const [showSuccessMessage, setShowSuccessMessage] = useState(false); 
-
-	// const navigate = useNavigate();
+	const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
 	const [showPassword, setShowPassword] = React.useState(false);
 	const { createUser } = UserAuth();
@@ -37,7 +34,7 @@ const SignUp = () => {
 				setError('All fields are required!');
 				return;
 			}
-			
+
 			if (registerPassword.length < 6) {
 				setError('Password cannot be less than 6 characters');
 				return;
@@ -56,9 +53,7 @@ const SignUp = () => {
 			setConfirmPassword('');
 			setShowSuccessMessage(true);
 
-			// navigate('/')
 		} catch (error: any) {
-			console.log("signup", error)
 			if (error.code === "ERR_BAD_REQUEST") setError("Invalid username or password");
 			else setError("Error: Request failed");
 		}
@@ -86,12 +81,11 @@ const SignUp = () => {
 
 	useEffect(() => {
 		if (showSuccessMessage) {
-		  setTimeout(() => {
-			setShowSuccessMessage(false);
-		  }, 3000); 
+			setTimeout(() => {
+				setShowSuccessMessage(false);
+			}, 3000);
 		}
-	  }, [showSuccessMessage]);
-	
+	}, [showSuccessMessage]);
 
 	return (
 		<div className='signup-form'>

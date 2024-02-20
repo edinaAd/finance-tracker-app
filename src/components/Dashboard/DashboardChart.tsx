@@ -5,7 +5,6 @@ const DashboardChart = ({data}: any) => {
 	return (
 		<Chart
 			style={{ marginTop: '40px' }}
-
 			option={{
 				legend: {
 					data: ['Expenses', 'Income']

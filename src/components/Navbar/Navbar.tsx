@@ -1,28 +1,27 @@
 import { Box, Button, Divider, Drawer, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import { UserAuth } from 'context/AuthContext';
 import React from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import './Navbar.scss';
 
 const Navbar = () => {
-    const { logout } = UserAuth()  ?? {};
-	const { user } = UserAuth();
+    const { logout } = UserAuth() ?? {};
+    const { user } = UserAuth();
     const location = useLocation();
 
-    console.log(user)
     const navigate = useNavigate();
 
     const handleLogout = async () => {
-		try {
-			await logout();
-			navigate('/');
+        try {
+            await logout();
+            navigate('/');
 
-		} catch (error) {
-			throw (error);
-		}
-	};
-	const rawerWidth = 240;
+        } catch (error) {
+            throw (error);
+        }
+    };
+    const rawerWidth = 240;
 
     return (
         <Drawer
@@ -65,7 +64,7 @@ const Navbar = () => {
                                     <ListItemText primary={text.charAt(0).toUpperCase() + text.slice(1)} />
                                 </ListItemButton>
                             </ListItem>
-                            {index < 3 && <Divider />} 
+                            {index < 3 && <Divider />}
                         </React.Fragment>
                     ))}
                 </List>

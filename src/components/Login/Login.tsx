@@ -1,9 +1,8 @@
-import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material';
-import React, { useEffect, useState } from 'react'
+import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
+import React, { useState } from 'react'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom';
-
 import './Login.scss';
 import { Link } from 'react-router-dom';
 import { UserAuth } from 'context/AuthContext';
@@ -27,27 +26,22 @@ const Login = () => {
 		event.preventDefault();
 	};
 
-
 	const handleLogin = async (e: any) => {
 		e.preventDefault();
 		setError('')
-		console.log(loginEmail, loginPassword)
 		try {
 			if (!loginEmail || !loginPassword) {
 				setError('Username and password are required');
 				return;
 			}
-			
+
 			const response = await login(loginEmail, loginPassword);
-			console.log(response)
 			const authToken = response.data.idToken;
 
 			localStorage.setItem('authToken', authToken);
 			navigate('/dashboard');
 
 		} catch (error: any) {
-			console.log("login",error)
-
 			if (error.code === "ERR_BAD_REQUEST") setError("Invalid username or password");
 			else setError("Error: Request failed");
 		}
@@ -55,18 +49,17 @@ const Login = () => {
 
 	const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setLoginEmail(e.target.value);
-		setError(''); 
+		setError('');
 	};
-	
+
 	const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setLoginPassword(e.target.value);
-		setError(''); 
+		setError('');
 	};
-	
 
 	return (
 		<div className='login-form'>
-			{error  && <InfoDialog type={MessageType.ERROR} message={error} open={true} />}
+			{error && <InfoDialog type={MessageType.ERROR} message={error} open={true} />}
 			<div className='container'>
 				<div className='grid grid-cols-12'>
 					<div className='flex justify-center items-center lg:col-span-6 md:col-span-6 col-span-12'>
@@ -81,7 +74,7 @@ const Login = () => {
 										id="outlined-adornment-email"
 										label="Email"
 										onChange={handleEmailChange}
-										/>
+									/>
 								</FormControl>
 								<FormControl sx={{ mb: 3, width: '65%' }} variant="outlined">
 									<InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>

@@ -54,7 +54,6 @@ const Income = () => {
 
 
 	const handleClose = (response: any | null) => {
-		console.log(response);
 		if (response.fields) {
 			const income = response.fields;
 			const total = parseFloat(income.total.integerValue);
@@ -66,7 +65,6 @@ const Income = () => {
 				category: income?.category?.stringValue
 			};
 			const index = incomes.findIndex(x => x.docId === updatedObj.docId);
-			console.log(index);
 			if (index > -1) {
 				incomes[index] = updatedObj;
 			} else {
@@ -86,7 +84,6 @@ const Income = () => {
 			try {
 				setIncomesLoading(true);
 				let incomesData = await fetchIncomes(user?.userId, user?.authToken);
-				console.log(incomesData)
 				let chartObj: any = {};
 
 				if (incomesData && incomesData.documents && Array.isArray(incomesData.documents)) {
@@ -121,7 +118,6 @@ const Income = () => {
 					})
 				);
 			} catch (error: any) {
-				console.log(error);
 				console.error('Error fetching incomes:', error.message);
 			}
 		};

@@ -14,10 +14,8 @@ function App() {
 
 	return (
 		<div className="">
-
 			<AuthContextProvider>
 				<Router>
-					{/* <Navbar /> */}
 					<Routes>
 						<Route path='/' element={<Login />} />
 						<Route path='/signup' element={<SignUp />} />

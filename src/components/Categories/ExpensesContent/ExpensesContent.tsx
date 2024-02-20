@@ -30,7 +30,7 @@ const ExpensesContent = () => {
             .finally(() => {
                 setLoading(false);
             })
-    }, []);
+    }, [user?.authToken]);
 
     return (
         <>

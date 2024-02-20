@@ -1,9 +1,9 @@
-import { Box, CssBaseline, Toolbar, Typography } from '@mui/material';
+import { Box, CssBaseline, Toolbar } from '@mui/material';
 import Header from 'components/Header/Header';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import Navbar from 'components/Navbar/Navbar';
 import { UserAuth } from 'context/AuthContext';
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { useEffect, useState } from 'react'
 import { fetchExpenses, fetchIncomes } from 'services/users-service';
 import './Dashboard.scss';
@@ -20,7 +20,6 @@ const Dashboard = () => {
 	const [chartData, setChartData] = useState<any>([]);
 	const [loading, setLoading] = useState(false);
 
-
 	const balance = totalIncome - totalExpenses;
 
 	useEffect(() => {
@@ -31,7 +30,6 @@ const Dashboard = () => {
 				const expensesData = await fetchExpenses(user?.userId, user?.authToken);
 				let totalExpenses = 0;
 				const expensesByDate: ExpenseData = {};
-
 
 				expensesData?.documents?.forEach((document: any) => {
 					const expense = document.fields;
@@ -87,7 +85,6 @@ const Dashboard = () => {
 	}, [user?.userId, user?.authToken]);
 
 
-	console.log(chartData)
 	return (
 		<div>
 			<Box sx={{ display: 'flex', margin: '30px' }}>

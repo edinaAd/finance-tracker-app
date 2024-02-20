@@ -4,7 +4,7 @@ import LoadingSpinner from "./LoadingSpinner/LoadingSpinner";
 
 const ProtectedRoute = ({ children }: any) => {
 	const { user } = UserAuth();
-	if (user ) {
+	if (user) {
 		if (user.loginRedirect) return <Navigate to="/" />
 		else return children;
 	}
